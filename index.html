@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0055CC">
+<title>Quantitech Campo</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--b:#0055CC;--bd:#003D99;--bm:#1A6FE8;--bp:#E8F0FF;--bt:#F0F5FF;--ink:#0A0F1E;--i2:#3A4060;--i3:#7A82A0;--ln:#D8DEEE;--bg:#F4F6FC;--wh:#FFFFFF;--gr:#00A86B;--gb:#E6F7F1;--am:#E07000;--ab:#FFF3E0;--re:#CC2200;--rb:#FFF0EE;--r:14px;--rl:20px;--sh:0 2px 10px rgba(0,50,150,.08);--shl:0 8px 28px rgba(0,50,150,.16)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;min-height:100vh;padding-bottom:80px}
+.hdr{background:var(--b);padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 3px 16px rgba(0,50,150,.28)}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:900;color:#fff;letter-spacing:.05em}
+.logo span{color:rgba(255,255,255,.5);font-weight:600;font-size:15px;margin-left:8px}
+.hdr-r{display:flex;align-items:center;gap:8px}
+.off-badge{font-size:11px;font-weight:800;padding:4px 10px;border-radius:20px;background:var(--am);color:#fff;display:none}
+.off-badge.show{display:block}
+.btn-reg{font-family:'Barlow',sans-serif;font-size:13px;font-weight:700;padding:6px 14px;border-radius:20px;background:rgba(255,255,255,.15);color:#fff;border:1.5px solid rgba(255,255,255,.3);cursor:pointer}
+.btn-reg:active{background:rgba(255,255,255,.25)}
+.prog-strip{background:var(--bd);padding:10px 20px 13px;position:sticky;top:58px;z-index:99}
+.prog-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.prog-lbl{font-size:11px;font-weight:800;color:rgba(255,255,255,.65);letter-spacing:.08em;text-transform:uppercase}
+.prog-pct{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;color:#fff}
+.prog-track{height:5px;background:rgba(255,255,255,.2);border-radius:5px;overflow:hidden}
+.prog-fill{height:100%;background:#fff;border-radius:5px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+.sdots{display:flex;gap:5px;margin-top:9px}
+.sd{height:4px;border-radius:4px;background:rgba(255,255,255,.2);transition:all .3s;flex:1}
+.sd.done{background:rgba(255,255,255,.55)}
+.sd.active{background:#fff}
+.outer{padding:20px 16px 0}
+.step{display:none;animation:fu .22s ease}
+.step.on{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.ey{font-size:11px;font-weight:800;color:var(--b);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.ttl{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;color:var(--ink);line-height:1;margin-bottom:6px}
+.sub{font-size:14px;color:var(--i3);line-height:1.5;margin-bottom:22px;font-weight:500}
+.card{background:var(--wh);border-radius:var(--rl);padding:20px;margin-bottom:12px;box-shadow:var(--sh);border:1.5px solid var(--ln)}
+.clbl{font-size:11px;font-weight:800;color:var(--b);letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:7px}
+.clbl::before{content:'';display:block;width:3px;height:14px;background:var(--b);border-radius:2px}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tc{background:var(--bt);border:2px solid var(--ln);border-radius:var(--r);padding:18px 12px;cursor:pointer;transition:all .15s;text-align:center;user-select:none}
+.tc:active{transform:scale(.97)}
+.tc.sel{border-color:var(--b);background:var(--bp);box-shadow:0 0 0 3px rgba(0,85,204,.13)}
+.ti{font-size:34px;margin-bottom:8px;display:block;line-height:1}
+.tn{font-size:14px;font-weight:800;color:var(--ink);display:block;margin-bottom:2px}
+.tm{font-size:11px;font-weight:600;color:var(--i3);display:block}
+.tb{display:inline-block;margin-top:7px;font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;background:var(--b);color:#fff;letter-spacing:.04em}
+.tc.sel .tn{color:var(--b)}
+.fld{margin-bottom:16px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lbl{display:block;font-size:12px;font-weight:800;color:var(--i2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:7px}
+.req{color:var(--b);margin-left:2px}
+input[type=text],input[type=number],input[type=date],input[type=time],select,textarea{width:100%;background:var(--wh);border:2px solid var(--ln);border-radius:var(--r);color:var(--ink);font-family:'Barlow',sans-serif;font-size:18px;font-weight:600;padding:14px 16px;outline:none;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none;appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--b);box-shadow:0 0 0 3px rgba(0,85,204,.11)}
+.err{border-color:var(--re)!important}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%230055CC' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:44px;cursor:pointer}
+textarea{resize:none;height:80px;font-size:15px;line-height:1.5}
+.hint{font-size:12px;font-weight:500;color:var(--i3);margin-top:7px;padding:9px 12px;background:var(--bt);border-radius:8px;border-left:3px solid var(--b);line-height:1.5}
+.ebox{display:none;background:linear-gradient(135deg,var(--b) 0%,var(--bm) 100%);border-radius:var(--rl);padding:22px 20px;margin-bottom:14px;text-align:center;box-shadow:var(--shl)}
+.ebox.show{display:block;animation:fu .22s ease}
+.elbl{font-size:11px;font-weight:800;color:rgba(255,255,255,.65);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.eval{font-family:'Barlow Condensed',sans-serif;font-size:58px;font-weight:900;color:#fff;line-height:1;letter-spacing:-.02em}
+.eunit{font-size:18px;font-weight:700;color:rgba(255,255,255,.75);margin-top:5px}
+.cprog{font-size:13px;font-weight:700;color:var(--i3);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.cpb{flex:1;height:4px;background:var(--ln);border-radius:4px;overflow:hidden}
+.cpbf{height:100%;background:var(--gr);border-radius:4px;transition:width .3s}
+.ci{display:flex;align-items:flex-start;gap:14px;background:var(--wh);border:2px solid var(--ln);border-radius:var(--r);padding:16px;margin-bottom:8px;cursor:pointer;transition:all .15s;user-select:none}
+.ci:active{transform:scale(.99)}
+.ci.chk{border-color:var(--gr);background:var(--gb)}
+.cb{width:28px;height:28px;border-radius:8px;border:2.5px solid var(--ln);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;margin-top:1px;background:var(--bg)}
+.ci.chk .cb{background:var(--gr);border-color:var(--gr)}
+.cv{font-size:15px;color:#fff;display:none;font-weight:900}
+.ci.chk .cv{display:block}
+.cb-body strong{font-size:15px;font-weight:800;color:var(--ink);display:block;margin-bottom:3px}
+.cb-body small{font-size:12px;font-weight:500;color:var(--i3);line-height:1.45}
+.ci.chk .cb-body strong{color:var(--gr)}
+.rbadge{font-size:10px;font-weight:800;color:var(--b);background:var(--bp);padding:2px 6px;border-radius:4px;margin-left:6px}
+.cwarn{background:var(--ab);border:2px solid var(--am);border-radius:var(--r);padding:12px 14px;font-size:13px;font-weight:600;color:var(--am);margin-top:10px;display:none}
+.ptrig{width:100%;background:var(--bt);border:2.5px dashed var(--b);border-radius:var(--rl);padding:26px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:all .15s}
+.ptrig:active{background:var(--bp)}
+.piw{width:60px;height:60px;border-radius:50%;background:var(--b);display:flex;align-items:center;justify-content:center}
+.piw svg{width:28px;height:28px;fill:#fff}
+.ptrig p{font-size:16px;font-weight:800;color:var(--b)}
+.ptrig small{font-size:12px;font-weight:500;color:var(--i3)}
+.pgrid{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.pthumb{width:78px;height:78px;border-radius:10px;object-fit:cover;border:2px solid var(--ln)}
+.pcnt{display:none;margin-top:10px;background:var(--gb);border:1.5px solid var(--gr);border-radius:8px;padding:8px 12px;font-size:13px;font-weight:700;color:var(--gr)}
+.pcnt.show{display:block}
+.gbadge{display:none;margin-top:8px;background:var(--bp);border:1.5px solid var(--b);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;color:var(--b);align-items:center;gap:6px}
+.gbadge.show{display:flex}
+#phinput{display:none}
+.rhero{background:linear-gradient(135deg,var(--b) 0%,var(--bm) 100%);border-radius:var(--rl);padding:24px 20px;margin-bottom:12px;text-align:center;box-shadow:var(--shl)}
+.rhl{font-size:11px;font-weight:800;color:rgba(255,255,255,.65);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.rhv{font-family:'Barlow Condensed',sans-serif;font-size:60px;font-weight:900;color:#fff;line-height:1}
+.rhu{font-size:17px;font-weight:700;color:rgba(255,255,255,.7);margin-top:4px}
+.rrow{display:flex;justify-content:space-between;align-items:flex-start;padding:11px 0;border-bottom:1.5px solid var(--ln);gap:12px}
+.rrow:last-child{border-bottom:none}
+.rrk{font-size:12px;font-weight:700;color:var(--i3);text-transform:uppercase;letter-spacing:.04em;padding-top:2px;flex-shrink:0}
+.rrv{font-size:14px;font-weight:800;color:var(--ink);text-align:right}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:800;padding:4px 10px;border-radius:20px}
+.pok{background:var(--gb);color:var(--gr)}
+.pwarn{background:var(--ab);color:var(--am)}
+.nav{display:flex;gap:10px;margin-top:24px;padding-bottom:12px}
+.bbk{flex:0 0 56px;height:56px;background:var(--wh);border:2px solid var(--ln);border-radius:var(--r);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--i2);transition:all .15s}
+.bbk:active{background:var(--bt);border-color:var(--b)}
+.bnx{flex:1;height:56px;background:var(--b);border:none;border-radius:var(--r);font-family:'Barlow',sans-serif;font-size:16px;font-weight:800;color:#fff;cursor:pointer;letter-spacing:.03em;box-shadow:0 4px 16px rgba(0,85,204,.28);transition:all .15s}
+.bnx:active{background:var(--bd);transform:translateY(1px)}
+.bcnf{width:100%;height:60px;background:var(--gr);border:none;border-radius:var(--r);font-family:'Barlow',sans-serif;font-size:17px;font-weight:800;color:#fff;cursor:pointer;box-shadow:0 4px 16px rgba(0,168,107,.28);margin-bottom:10px;transition:all .15s}
+.bcnf:active{background:#008a56;transform:translateY(1px)}
+#succ{display:none}
+.sw{padding:48px 20px;text-align:center}
+.sck{width:84px;height:84px;border-radius:50%;background:var(--gr);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:0 8px 28px rgba(0,168,107,.28)}
+.sck svg{width:40px;height:40px;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.sw h2{font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:900;color:var(--ink);margin-bottom:10px}
+.sw p{font-size:15px;color:var(--i3);line-height:1.65;margin-bottom:32px;font-weight:500}
+.sid{font-size:12px;font-weight:700;color:var(--i3);background:var(--ln);border-radius:6px;padding:5px 12px;display:inline-block;margin-top:4px;font-family:monospace}
+.bem{width:100%;height:56px;background:var(--b);border:none;border-radius:var(--r);font-family:'Barlow',sans-serif;font-size:16px;font-weight:800;color:#fff;cursor:pointer;margin-bottom:10px;box-shadow:0 4px 16px rgba(0,85,204,.28)}
+.bnw{width:100%;height:52px;background:var(--wh);border:2px solid var(--ln);border-radius:var(--r);font-family:'Barlow',sans-serif;font-size:15px;font-weight:700;color:var(--i2);cursor:pointer}
+#hist{display:none;padding:20px 16px}
+#hist.show{display:block}
+.hhdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.hhdr h2{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900}
+.hi{background:var(--wh);border:2px solid var(--ln);border-radius:var(--rl);padding:16px;margin-bottom:10px;box-shadow:var(--sh)}
+.htop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.hname{font-size:15px;font-weight:800;color:var(--ink)}
+.hdate{font-size:12px;font-weight:600;color:var(--i3);margin-top:2px}
+.hefic{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:var(--b)}
+.hmeta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.hchip{font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;background:var(--bp);color:var(--b)}
+.bresend{font-size:12px;font-weight:800;padding:7px 14px;border-radius:8px;background:var(--bp);color:var(--b);border:1.5px solid var(--b);cursor:pointer;margin-top:6px}
+.hsent{font-size:12px;font-weight:700;color:var(--gr);margin-top:6px}
+.empty{text-align:center;padding:56px 0;color:var(--i3);font-size:14px;font-weight:600}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="logo">QUANTITECH <span>CAMPO</span></div>
+  <div class="hdr-r">
+    <div class="off-badge" id="offb">OFFLINE</div>
+    <button class="btn-reg" onclick="togHist()">Registros</button>
+  </div>
+</div>
+<div class="prog-strip">
+  <div class="prog-meta"><span class="prog-lbl" id="plbl">PASSO 1 DE 5</span><span class="prog-pct" id="ppct">20%</span></div>
+  <div class="prog-track"><div class="prog-fill" id="pfill" style="width:20%"></div></div>
+  <div class="sdots" id="sdots"></div>
+</div>
+<input type="file" id="phinput" accept="image/*" capture="environment" multiple>
+<div id="mf">
+<div class="outer">
+  <div class="step on" id="s1">
+    <div class="ey">Passo 01 / 05</div><div class="ttl">Identificação</div><div class="sub">Selecione o tipo de equipamento e preencha os dados básicos.</div>
+    <div class="card">
+      <div class="clbl">Tipo de equipamento</div>
+      <div class="tg">
+        <div class="tc sel" onclick="selT(this,'onibus')"><span class="ti">🚌</span><span class="tn">Ônibus / Van</span><span class="tm">Frota urbana</span><span class="tb">km/L</span></div>
+        <div class="tc" onclick="selT(this,'caminhao')"><span class="ti">🚛</span><span class="tn">Caminhão</span><span class="tm">Rodoviário</span><span class="tb">km/L</span></div>
+        <div class="tc" onclick="selT(this,'gerador')"><span class="ti">⚡</span><span class="tn">Gerador</span><span class="tm">Estacionário</span><span class="tb">L/h</span></div>
+        <div class="tc" onclick="selT(this,'maquina')"><span class="ti">🏗️</span><span class="tn">Linha Amarela</span><span class="tm">Mineração</span><span class="tb">L/h</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="clbl">Dados</div>
+      <div class="fld"><label class="lbl">Empresa / cliente <span class="req">*</span></label><input type="text" id="emp" placeholder="Nome da empresa"></div>
+      <div class="fr">
+        <div class="fld"><label class="lbl">Veículo / ID <span class="req">*</span></label><input type="text" id="vei" placeholder="Placa ou série"></div>
+        <div class="fld"><label class="lbl">Operador</label><input type="text" id="ope" placeholder="Nome"></div>
+      </div>
+      <div class="fld"><label class="lbl">Período</label><select id="per"><option value="pos">COM equipamento instalado</option><option value="pre">SEM equipamento (baseline)</option></select></div>
+    </div>
+    <div class="nav"><button class="bnx" onclick="go(2)">Próximo →</button></div>
+  </div>
+  <div class="step" id="s2">
+    <div class="ey">Passo 02 / 05</div><div class="ttl">Checklist</div><div class="sub">Confirme antes de registrar. Itens com ★ são obrigatórios.</div>
+    <div class="card">
+      <div class="cprog"><span id="clbl">0 / 5 confirmados</span><div class="cpb"><div class="cpbf" id="cpbf" style="width:0%"></div></div></div>
+      <div class="ci" onclick="togC(this)" data-req="true"><div class="cb"><span class="cv">✓</span></div><div class="cb-body"><strong>Tanque "boca cheia" <span class="rbadge">★</span></strong><small>Completamente cheio agora. Parcial invalida a medição.</small></div></div>
+      <div class="ci" onclick="togC(this)" data-req="true"><div class="cb"><span class="cv">✓</span></div><div class="cb-body"><strong>Nota fiscal do posto em mãos <span class="rbadge">★</span></strong><small>A NF com litros exatos é o único dado auditável.</small></div></div>
+      <div class="ci" onclick="togC(this)" data-req="true"><div class="cb"><span class="cv">✓</span></div><div class="cb-body"><strong>Hodômetro / horímetro legível <span class="rbadge">★</span></strong><small>Fotografe antes de sair do veículo.</small></div></div>
+      <div class="ci" onclick="togC(this)"><div class="cb"><span class="cv">✓</span></div><div class="cb-body"><strong>Mesma rota / operação do período anterior</strong><small>Mudança de perfil → anote nas observações.</small></div></div>
+      <div class="ci" onclick="togC(this)"><div class="cb"><span class="cv">✓</span></div><div class="cb-body"><strong>Nenhuma manutenção relevante entre abastecimentos</strong><small>Filtro, injeção ou pneus → registre nas observações.</small></div></div>
+      <div class="cwarn" id="cwarn">⚠️ Confirme os itens obrigatórios (★) para continuar.</div>
+    </div>
+    <div class="nav"><button class="bbk" onclick="go(1)">←</button><button class="bnx" onclick="go(3)">Próximo →</button></div>
+  </div>
+  <div class="step" id="s3">
+    <div class="ey">Passo 03 / 05</div><div class="ttl" id="s3t">Hodômetro</div><div class="sub">Leitura atual, anterior e litros abastecidos.</div>
+    <div class="ebox" id="ebox"><div class="elbl" id="elbl">EFICIÊNCIA NESTE CICLO</div><div class="eval" id="eval">—</div><div class="eunit" id="eunit">km/L</div></div>
+    <div class="card">
+      <div class="clbl" id="medlbl">Leitura do hodômetro</div>
+      <div class="fld"><label class="lbl" id="latl">Leitura atual (km) <span class="req">*</span></label><input type="number" id="mat" placeholder="Ex: 124850" inputmode="numeric" oninput="cEf()"></div>
+      <div class="fld"><label class="lbl" id="lantl">Leitura anterior (km) <span class="req">*</span></label><input type="number" id="man" placeholder="Ex: 123200" inputmode="numeric" oninput="cEf()"><div class="hint">Se for o 1º registro, use a leitura no momento da instalação.</div></div>
+    </div>
+    <div class="card">
+      <div class="clbl">Abastecimento</div>
+      <div class="fld"><label class="lbl">Litros abastecidos (NF) <span class="req">*</span></label><input type="number" id="lit" placeholder="Ex: 180.5" inputmode="decimal" step="0.1" oninput="cEf()"></div>
+      <div class="fr">
+        <div class="fld"><label class="lbl">Data <span class="req">*</span></label><input type="date" id="dat"></div>
+        <div class="fld"><label class="lbl">Hora</label><input type="time" id="hor"></div>
+      </div>
+      <div class="fr">
+        <div class="fld"><label class="lbl">Preço/litro (R$)</label><input type="number" id="prc" placeholder="6.50" step="0.01" inputmode="decimal"></div>
+        <div class="fld"><label class="lbl">Rota / operação</label><select id="rot"><option value="">Selecione...</option><option value="urbano">Urbano</option><option value="rodoviario">Rodoviário</option><option value="misto">Misto</option><option value="mineracao_corte">Mineração — corte</option><option value="mineracao_transp">Mineração — transporte</option><option value="estacionario">Estacionário</option></select></div>
+      </div>
+    </div>
+    <div class="nav"><button class="bbk" onclick="go(2)">←</button><button class="bnx" onclick="go(4)">Próximo →</button></div>
+  </div>
+  <div class="step" id="s4">
+    <div class="ey">Passo 04 / 05</div><div class="ttl">Evidências</div><div class="sub">Fotos do hodômetro e da nota fiscal. Âncora do registro.</div>
+    <div class="card">
+      <div class="clbl">Fotos</div>
+      <div class="ptrig" onclick="document.getElementById('phinput').click()">
+        <div class="piw"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+        <p>Tirar foto</p><small>Hodômetro + Nota fiscal do posto</small>
+      </div>
+      <div class="pgrid" id="pgrid"></div>
+      <div class="pcnt" id="pcnt"></div>
+      <div class="gbadge" id="gbadge">📍 Localização registrada</div>
+    </div>
+    <div class="card">
+      <div class="clbl">Responsável</div>
+      <div class="fld"><label class="lbl">Nome do responsável do cliente</label><input type="text" id="res" placeholder="Nome completo"></div>
+      <div class="fld"><label class="lbl">Observações</label><textarea id="obs" placeholder="Ex: Rota diferente. Manutenção realizada."></textarea></div>
+    </div>
+    <div class="nav"><button class="bbk" onclick="go(3)">←</button><button class="bnx" onclick="go(5)">Revisar →</button></div>
+  </div>
+  <div class="step" id="s5">
+    <div class="ey">Passo 05 / 05</div><div class="ttl">Revisão</div><div class="sub">Confirme os dados antes de salvar.</div>
+    <div id="rc"></div>
+    <div class="nav" style="flex-direction:column;gap:10px">
+      <button class="bcnf" onclick="salvar()">✓ Confirmar e salvar registro</button>
+      <button class="bbk" onclick="go(4)" style="flex:unset;width:100%;height:48px;font-size:14px;font-family:'Barlow',sans-serif;font-weight:700">← Voltar e editar</button>
+    </div>
+  </div>
+</div>
+</div>
+<div id="succ"><div class="sw">
+  <div class="sck"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+  <h2>Registro salvo!</h2>
+  <p>Dados salvos no dispositivo.<br>Envie por e-mail para a Quantitech<br>agora ou quando tiver conexão.</p>
+  <div class="sid" id="sid"></div><br><br>
+  <button class="bem" onclick="envEmail()">📧 Enviar por e-mail</button>
+  <button class="bnw" onclick="novo()">+ Novo registro</button>
+</div></div>
+<div id="hist">
+  <div class="hhdr"><h2>Registros</h2><button class="btn-reg" style="background:#D8DEEE;color:#3A4060;border-color:#D8DEEE" onclick="togHist()">Fechar</button></div>
+  <div id="hl"></div>
+</div>
+<script>
+let cs=1,tp='onibus',ph=[],cid=null,regs=JSON.parse(localStorage.getItem('qt3')||'[]');
+function init(){
+  const n=new Date();
+  document.getElementById('dat').value=n.toISOString().split('T')[0];
+  document.getElementById('hor').value=n.toTimeString().slice(0,5);
+  rDots();
+  window.addEventListener('offline',()=>document.getElementById('offb').classList.add('show'));
+  window.addEventListener('online',()=>document.getElementById('offb').classList.remove('show'));
+  if(!navigator.onLine)document.getElementById('offb').classList.add('show');
+}
+function rDots(){
+  const w=document.getElementById('sdots');w.innerHTML='';
+  for(let i=1;i<=5;i++){const d=document.createElement('div');d.className='sd'+(i<cs?' done':i===cs?' active':'');w.appendChild(d);}
+  const p=Math.round(cs/5*100);
+  document.getElementById('pfill').style.width=p+'%';
+  document.getElementById('ppct').textContent=p+'%';
+  document.getElementById('plbl').textContent='PASSO '+cs+' DE 5';
+}
+function selT(el,t){
+  document.querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');tp=t;
+  const lh=t==='gerador'||t==='maquina',lb=lh?'Horímetro':'Hodômetro',u=lh?'horas':'km';
+  document.getElementById('s3t').textContent=lb;
+  document.getElementById('medlbl').textContent='Leitura do '+lb.toLowerCase();
+  document.getElementById('latl').innerHTML='Leitura atual ('+u+') <span class="req">*</span>';
+  document.getElementById('lantl').innerHTML='Leitura anterior ('+u+') <span class="req">*</span>';
+  document.getElementById('eunit').textContent=lh?'L/h':'km/L';
+  document.getElementById('elbl').textContent=lh?'CONSUMO NESTE CICLO':'EFICIÊNCIA NESTE CICLO';
+}
+function togC(el){
+  el.classList.toggle('chk');
+  const tot=document.querySelectorAll('.ci').length,done=document.querySelectorAll('.ci.chk').length;
+  document.getElementById('clbl').textContent=done+' / '+tot+' confirmados';
+  document.getElementById('cpbf').style.width=(done/tot*100)+'%';
+}
+function fv(id){return parseFloat(document.getElementById(id).value)||0;}
+function cEf(){
+  const at=fv('mat'),an=fv('man'),lt=fv('lit'),d=at-an,lh=tp==='gerador'||tp==='maquina';
+  if(d>0&&lt>0){
+    document.getElementById('eval').textContent=(lh?lt/d:d/lt).toFixed(2);
+    document.getElementById('ebox').classList.add('show');
+  } else document.getElementById('ebox').classList.remove('show');
+}
+function go(n){
+  if(n===2){
+    const e=document.getElementById('emp'),v=document.getElementById('vei');
+    if(!e.value.trim()){e.classList.add('err');e.focus();return;}
+    if(!v.value.trim()){v.classList.add('err');v.focus();return;}
+    e.classList.remove('err');v.classList.remove('err');
+  }
+  if(n===3){
+    const ok=Array.from(document.querySelectorAll('.ci[data-req="true"]')).every(r=>r.classList.contains('chk'));
+    document.getElementById('cwarn').style.display=ok?'none':'block';
+  }
+  if(n===4){
+    const at=fv('mat'),an=fv('man'),lt=fv('lit');
+    let err=false;
+    ['mat','man','lit'].forEach(id=>{const el=document.getElementById(id);if(!el.value||parseFloat(el.value)<=0){el.classList.add('err');err=true;}else el.classList.remove('err');});
+    if(err)return;if(at<=an){document.getElementById('mat').classList.add('err');return;}
+  }
+  if(n===5)bRev();
+  document.getElementById('s'+cs).classList.remove('on');
+  cs=n;document.getElementById('s'+cs).classList.add('on');
+  rDots();window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('phinput').addEventListener('change',function(e){
+  Array.from(e.target.files).forEach(f=>{const r=new FileReader();r.onload=ev=>{ph.push(ev.target.result);rPh();};r.readAsDataURL(f);});
+  document.getElementById('gbadge').classList.add('show');
+});
+function rPh(){
+  document.getElementById('pgrid').innerHTML=ph.map(p=>`<img src="${p}" class="pthumb">`).join('');
+  const b=document.getElementById('pcnt');
+  b.textContent='✓ '+ph.length+' foto'+(ph.length>1?'s':'')+' registrada'+(ph.length>1?'s':'');
+  b.classList.add('show');
+}
+function gData(){
+  const at=fv('mat'),an=fv('man'),lt=fv('lit'),d=at-an,lh=tp==='gerador'||tp==='maquina';
+  const ef=(d>0&&lt>0)?(lh?lt/d:d/lt):null;
+  return{id:cid||('QT-'+Date.now()),ts:new Date().toISOString(),tipo:tp,empresa:document.getElementById('emp').value,veiculo:document.getElementById('vei').value,operador:document.getElementById('ope').value,periodo:document.getElementById('per').value,mat:at,man:an,delta:d,litros:lt,data:document.getElementById('dat').value,hora:document.getElementById('hor').value,preco:fv('prc'),rota:document.getElementById('rot').value,resp:document.getElementById('res').value,obs:document.getElementById('obs').value,eficiencia:ef,unidade:lh?'L/h':'km/L',fotos:ph.length,checklist:document.querySelectorAll('.ci.chk').length,enviado:false};
+}
+function bRev(){
+  const d=gData(),tn={onibus:'Ônibus / Van',caminhao:'Caminhão',gerador:'Gerador',maquina:'Linha Amarela'},pn={pos:'COM equipamento',pre:'SEM equipamento (baseline)'};
+  let h='';
+  if(d.eficiencia!==null)h+=`<div class="rhero"><div class="rhl">${d.unidade==='L/h'?'Consumo neste ciclo':'Eficiência neste ciclo'}</div><div class="rhv">${d.eficiencia.toFixed(2)}</div><div class="rhu">${d.unidade}</div></div>`;
+  h+=`<div class="card"><div class="clbl">Identificação</div><div class="rrow"><span class="rrk">Tipo</span><span class="rrv">${tn[d.tipo]||d.tipo}</span></div><div class="rrow"><span class="rrk">Empresa</span><span class="rrv">${d.empresa}</span></div><div class="rrow"><span class="rrk">Veículo</span><span class="rrv">${d.veiculo}</span></div><div class="rrow"><span class="rrk">Período</span><span class="rrv">${pn[d.periodo]}</span></div>${d.operador?`<div class="rrow"><span class="rrk">Operador</span><span class="rrv">${d.operador}</span></div>`:''}</div>`;
+  h+=`<div class="card"><div class="clbl">Consumo</div><div class="rrow"><span class="rrk">Data / Hora</span><span class="rrv">${d.data} ${d.hora}</span></div><div class="rrow"><span class="rrk">Leitura atual</span><span class="rrv">${d.mat.toLocaleString('pt-BR')}</span></div><div class="rrow"><span class="rrk">Leitura anterior</span><span class="rrv">${d.man.toLocaleString('pt-BR')}</span></div><div class="rrow"><span class="rrk">Percurso / horas</span><span class="rrv">${d.delta.toLocaleString('pt-BR')}</span></div><div class="rrow"><span class="rrk">Litros</span><span class="rrv">${d.litros.toFixed(1)} L</span></div>${d.preco>0?`<div class="rrow"><span class="rrk">Preço/L</span><span class="rrv">R$ ${d.preco.toFixed(2)}</span></div>`:''}${d.rota?`<div class="rrow"><span class="rrk">Rota</span><span class="rrv">${d.rota}</span></div>`:''}</div>`;
+  const co=d.checklist>=3,fo=d.fotos>0;
+  h+=`<div class="card"><div class="clbl">Protocolo</div><div class="rrow"><span class="rrk">Checklist</span><span class="rrv"><span class="pill ${co?'pok':'pwarn'}">${co?'✓':''} ${d.checklist}/5</span></span></div><div class="rrow"><span class="rrk">Fotos</span><span class="rrv"><span class="pill ${fo?'pok':'pwarn'}">${fo?'✓ '+d.fotos+' foto'+(d.fotos>1?'s':''):'Nenhuma'}</span></span></div>${d.resp?`<div class="rrow"><span class="rrk">Responsável</span><span class="rrv">${d.resp}</span></div>`:''}${d.obs?`<div class="rrow"><span class="rrk">Obs.</span><span class="rrv" style="font-size:13px;max-width:60%">${d.obs}</span></div>`:''}</div>`;
+  document.getElementById('rc').innerHTML=h;
+}
+function salvar(){
+  const d=gData();cid=d.id;regs.push(d);localStorage.setItem('qt3',JSON.stringify(regs));
+  document.getElementById('mf').style.display='none';document.getElementById('succ').style.display='block';
+  document.getElementById('sid').textContent=d.id;window.scrollTo({top:0,behavior:'smooth'});
+}
+function ebody(d){
+  const tn={onibus:'Ônibus / Van',caminhao:'Caminhão',gerador:'Gerador',maquina:'Linha Amarela'},pn={pos:'COM equipamento instalado',pre:'SEM equipamento (baseline)'};
+  return`REGISTRO DE ABASTECIMENTO — QUANTITECH\nID: ${d.id}\nData/Hora: ${d.data} ${d.hora}\n\nIDENTIFICAÇÃO\nEquipamento: ${tn[d.tipo]||d.tipo}\nEmpresa: ${d.empresa}\nVeículo / ID: ${d.veiculo}\nOperador: ${d.operador||'—'}\nPeríodo: ${pn[d.periodo]}\n\nCONSUMO\nLeitura atual: ${d.mat.toLocaleString('pt-BR')}\nLeitura anterior: ${d.man.toLocaleString('pt-BR')}\nPercurso / Horas: ${d.delta.toLocaleString('pt-BR')}\nLitros abastecidos: ${d.litros.toFixed(1)} L\nEficiência: ${d.eficiencia!==null?d.eficiencia.toFixed(2)+' '+d.unidade:'N/D'}\nPreço por litro: ${d.preco>0?'R$ '+d.preco.toFixed(2):'—'}\nRota / Operação: ${d.rota||'—'}\n\nPROTOCOLO\nChecklist: ${d.checklist}/5\nFotos: ${d.fotos}\nResponsável: ${d.resp||'—'}\nObservações: ${d.obs||'—'}\n\nEnviado via Quantitech Field App — app.quantitech.tech`;
+}
+function envEmail(){
+  const d=regs.find(r=>r.id===cid)||regs[regs.length-1];
+  window.location.href=`mailto:registros@quantitech.tech?subject=${encodeURIComponent('[Quantitech] Abastecimento — '+d.empresa+' / '+d.veiculo+' — '+d.data)}&body=${encodeURIComponent(ebody(d))}`;
+  d.enviado=true;localStorage.setItem('qt3',JSON.stringify(regs));
+}
+function novo(){
+  ph=[];cid=null;cs=1;
+  document.getElementById('succ').style.display='none';document.getElementById('mf').style.display='block';
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('on'));document.getElementById('s1').classList.add('on');
+  document.querySelectorAll('.ci').forEach(c=>c.classList.remove('chk'));
+  document.getElementById('clbl').textContent='0 / 5 confirmados';document.getElementById('cpbf').style.width='0%';
+  document.getElementById('cwarn').style.display='none';document.getElementById('pgrid').innerHTML='';
+  document.getElementById('pcnt').classList.remove('show');document.getElementById('gbadge').classList.remove('show');
+  document.getElementById('ebox').classList.remove('show');
+  ['emp','vei','ope','mat','man','lit','res','obs'].forEach(id=>{const el=document.getElementById(id);el.value='';el.classList&&el.classList.remove('err');});
+  const n=new Date();document.getElementById('dat').value=n.toISOString().split('T')[0];document.getElementById('hor').value=n.toTimeString().slice(0,5);
+  rDots();window.scrollTo({top:0,behavior:'smooth'});
+}
+function togHist(){
+  const hw=document.getElementById('hist'),mf=document.getElementById('mf'),ss=document.getElementById('succ');
+  if(hw.classList.contains('show')){hw.classList.remove('show');ss.style.display==='block'?null:mf.style.display='block';}
+  else{mf.style.display='none';ss.style.display='none';hw.classList.add('show');rHist();}
+}
+function rHist(){
+  const hl=document.getElementById('hl');
+  if(!regs.length){hl.innerHTML='<div class="empty">Nenhum registro ainda.</div>';return;}
+  const tn={onibus:'Ônibus',caminhao:'Caminhão',gerador:'Gerador',maquina:'Linha Amarela'};
+  hl.innerHTML=[...regs].reverse().map(r=>`<div class="hi"><div class="htop"><div><div class="hname">${r.empresa} — ${r.veiculo}</div><div class="hdate">${r.data} ${r.hora}</div></div><div class="hefic">${r.eficiencia!==null&&r.eficiencia!==undefined?parseFloat(r.eficiencia).toFixed(2)+' '+r.unidade:'—'}</div></div><div class="hmeta"><span class="hchip">${tn[r.tipo]||r.tipo}</span><span class="hchip">${r.litros} L</span>${r.rota?`<span class="hchip">${r.rota}</span>`:''}</div>${!r.enviado?`<button class="bresend" onclick="renv('${r.id}')">Enviar por e-mail →</button>`:`<div class="hsent">✓ Enviado</div>`}</div>`).join('');
+}
+function renv(id){
+  const d=regs.find(r=>r.id===id);if(!d)return;
+  window.location.href=`mailto:registros@quantitech.tech?subject=${encodeURIComponent('[Quantitech] Abastecimento — '+d.empresa+' / '+d.veiculo+' — '+d.data)}&body=${encodeURIComponent(ebody(d))}`;
+  d.enviado=true;localStorage.setItem('qt3',JSON.stringify(regs));setTimeout(rHist,800);
+}
+init();
+</script>
+</body>
+</html>
